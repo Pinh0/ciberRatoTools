@@ -64,7 +64,6 @@ class MyRob(CRobLinkAngs):
             
 
     def wander(self):
-
         center_id = 0
         left_id = 1
         right_id = 2
@@ -74,10 +73,50 @@ class MyRob(CRobLinkAngs):
         rightsens=self.measures.irSensor[right_id]
         backsens=self.measures.irSensor[back_id]
 
-        kp=0.17
-        centered=leftsens-rightsens
-        self.driveMotors(0.15+centered*kp,0.15-centered*kp)
+        if leftsens > 4:
+            self.driveMotors(1, -1)
+            print(1,-1)
+        elif rightsens > 4:
+            self.driveMotors(-1 ,  1)
+            print(-1, 1)
+        elif leftsens > 3.2:
+            self.driveMotors(leftsens * 0.07, 0)
+            print(leftsens * 0.05, rightsens * 0.01)
+        elif rightsens > 3.2:
+            self.driveMotors(0, rightsens * 0.07)
+            print(leftsens * 0.01, rightsens * 0.05)
+        elif leftsens > 2.4:
+            self.driveMotors(leftsens * 0.07, rightsens * 0.01)
+            print(leftsens * 0.05, rightsens * 0.01)
+        elif rightsens > 2.4:
+            self.driveMotors(leftsens * 0.01, rightsens * 0.07)
+            print(leftsens * 0.01, rightsens * 0.05)
+        else:
+            self.driveMotors(leftsens * 0.11, rightsens * 0.11 )
+            print(leftsens * 0.1, rightsens * 0.1)
 
+
+        if self.measures.collision or frontsens>4:
+            self.driveMotors(leftsens*-0.07,rightsens*-0.07)
+            print(leftsens*-0.1,rightsens*-0.1)
+
+        print(frontsens, leftsens, rightsens, backsens)
+
+        # if    self.measures.irSensor[center_id] > 5.0\
+        #    or self.measures.irSensor[left_id]   > 5.0\
+        #    or self.measures.irSensor[right_id]  > 5.0\
+        #    or self.measures.irSensor[back_id]   > 5.0:
+        #     print('Rotate left')
+        #     self.driveMotors(-0.1,+0.1)
+        # elif self.measures.irSensor[left_id]> 2.7:
+        #     print('Rotate slowly right')
+        #     self.driveMotors(0.1,0.0)
+        # elif self.measures.irSensor[right_id]> 2.7:
+        #     print('Rotate slowly left')
+        #     self.driveMotors(0.0,0.1)
+        # else:
+        #     print('Go')
+        #     self.driveMotors(0.1,0.1)
 
 class Map():
     def __init__(self, filename):
@@ -126,8 +165,7 @@ for i in range(1, len(sys.argv),2):
         quit()
 
 if __name__ == '__main__':
-    angle=35.0
-    rob=MyRob(rob_name,pos,[0.0,angle,-angle,180.0],host)
+    rob=MyRob(rob_name,pos,[0.0,45.0,-45.0,180.0],host)
     if mapc != None:
         rob.setMap(mapc.labMap)
         rob.printMap()
