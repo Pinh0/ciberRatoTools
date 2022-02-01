@@ -74,6 +74,8 @@ class MyRob(CRobLinkAngs):
         rightsens=self.measures.irSensor[right_id]
         backsens=self.measures.irSensor[back_id]
 
+
+
         kp=0.17
         centered=leftsens-rightsens
         self.driveMotors(0.15+centered*kp,0.15-centered*kp)
